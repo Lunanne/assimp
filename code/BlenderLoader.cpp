@@ -1206,7 +1206,7 @@ aiCamera* BlenderImporter::ConvertCamera(const Scene& /*in*/, const Object* obj,
     out->mUp = aiVector3D(0.f, 1.f, 0.f);
     out->mLookAt = aiVector3D(0.f, 0.f, -1.f);
     if (cam->sensor_x && cam->lens) {
-        out->mHorizontalFOV = std::atan2(cam->sensor_x,  2.f * cam->lens);
+        out->mHorizontalFOV = 2 * std::atan2(cam->sensor_x,  2.f * cam->lens);
     }
     out->mClipPlaneNear = cam->clipsta;
     out->mClipPlaneFar = cam->clipend;
@@ -1248,6 +1248,12 @@ aiLight* BlenderImporter::ConvertLight(const Scene& /*in*/, const Object* obj, c
             out->mUp = aiVector3D(0.f, 1.f, 0.f);
             break;
 
+        case Lamp::Type_Spot:
+            out->mType = aiLightSource_SPOT;
+            out->mAngleInnerCone = lamp->spotsize;
+            out->mAngleOuterCone = lamp->spotsize;
+            out->mDirection = aiVector3D(0.f, 0.f, -1.f);
+            break;
         default:
             break;
     }
